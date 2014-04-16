@@ -1,0 +1,35 @@
+以下のクラスと関数は全てnamespace dyz_parser内に存在する
+ここでは主要な関数のみを載せる。その実装で使われた別な関数に関してはソースコードを読んで確認して欲しい
+当ライブラリではstd::stringに格納できる文字列のみを想定している
+
+struct sentence_data
+文の構造のデータを表すクラス
+namespace placeholder内のtoken_holder,tuple_holder,space_holder,及びstd::stringにキャストできる文字列をコンストラクタに1個以上渡し使用する
+解析される文字列の種類は以下の4つ。以下の組み合わせで短文の構造が構成されているとみなす。
+・token
+　a-z,A-Z,0-9,及び_で構成される何らかの文字列か'"'で囲まれる文字列リテラル。token_holderを渡した時にセットされる
+・string
+　コンストラクタで渡された固定の文字列。文字列を渡した時にセットされる
+・tuple
+　'('で始まり')'で終わり、','で区切られた複数の文字列。tuple_holderを渡した時にセットされる
+・space
+　0個以上の半角スペース。space_holderを渡した時にセットされる
+例えばコンストラクタでtoken_holder,":",token_holderと渡した場合はtoken,string,tokenとセットされ、"hoge:piyo"や"x:yz"などの文字列がこの構文に合致する
+基本的に各要素間にスペースは許されないが(スペースを許す場合はspace_holderを渡す)「隣接する2つのtoken」「a-z,A-Z,0-9,及び_で終わるstringとtoken」及び「tokenとa-z,A-Z,0-9,及び_ではじまるstring」には1つ以上の半角スペースが要求される
+
+struct parse_result
+解析結果を示す構造体
+以下の4つのメンバ変数をもつ
+・std::list<std::string> tokens_
+　tokenで解析された結果を順に保持するリスト
+・std::list<std::list<std::string>> tuples_
+　tupleで解析された結果についてそれぞれ順に保持するリスト
+・std::list<sentence_data>::const_iiterator ite_;
+　どの構文で解析されたかを表すイテレータ
+・bool is_valid
+　解析結果が有効かどうかのフラグ、falseなら解析失敗
+
+parse_result parse_line(std::list<sentence_data> const& data,std::string line)
+lineがdataで渡した構文のいずれかに合致するならそれで解析して解析結果を返す
+いずれでも合致しない場合はis_validをfalseにして返す
+複数合致する場合より先頭にある構文で解析する
