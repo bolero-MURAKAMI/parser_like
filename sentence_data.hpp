@@ -14,10 +14,11 @@ namespace dyz_parser
 		struct token_holder_type{};
 		struct tuple_holder_type{};
 		struct space_holder_type{};
+		struct str_literal_type{};
 
 		enum class data_type
 		{
-			token, string, tuple, space
+			token, string, tuple, str_literal, space
 		};
 
 		struct data
@@ -27,6 +28,7 @@ namespace dyz_parser
 			data(token_holder_type) :type_(data_type::token){}
 			data(tuple_holder_type) :type_(data_type::tuple){}
 			data(space_holder_type) :type_(data_type::space){}
+			data(str_literal_type) :type_(data_type::str_literal){}
 			data(std::string str) :str_(str), type_(data_type::string){}
 		};
 	}
@@ -36,6 +38,7 @@ namespace dyz_parser
 		parse_helper::token_holder_type token_holder;
 		parse_helper::tuple_holder_type tuple_holder;
 		parse_helper::space_holder_type space_holder;
+		parse_helper::str_literal_type string_literal_holder;
 	}
 
 	struct sentence_data
