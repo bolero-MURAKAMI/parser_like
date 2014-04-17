@@ -4,28 +4,34 @@
 
 struct sentence_data
 文の構造のデータを表すクラス
-namespace placeholder内のtoken_holder,tuple_holder,space_holder,及びstd::stringにキャストできる文字列をコンストラクタに1個以上渡し使用する
+namespace placeholder内のtoken_holder,tuple_holder,space_holder,string_literal_holder,及びstd::stringにキャストできる文字列をコンストラクタに1個以上渡し使用する
 解析される文字列の種類は以下の4つ。以下の組み合わせで短文の構造が構成されているとみなす。
 ・token
-　a-z,A-Z,0-9,及び_で構成される何らかの文字列か'"'で囲まれる文字列リテラル。token_holderを渡した時にセットされる
+　a-z,A-Z,0-9,及び_で構成される何らかの文字列。token_holderを渡した時にセットされる
 ・string
 　コンストラクタで渡された固定の文字列。文字列を渡した時にセットされる
 ・tuple
 　'('で始まり')'で終わり、','で区切られた複数の文字列。tuple_holderを渡した時にセットされる
 ・space
 　0個以上の半角スペース。space_holderを渡した時にセットされる
+・str_literal
+　""で囲まれる文字列
 例えばコンストラクタでtoken_holder,":",token_holderと渡した場合はtoken,string,tokenとセットされ、"hoge:piyo"や"x:yz"などの文字列がこの構文に合致する
 基本的に各要素間にスペースは許されないが(スペースを許す場合はspace_holderを渡す)「隣接する2つのtoken」「a-z,A-Z,0-9,及び_で終わるstringとtoken」及び「tokenとa-z,A-Z,0-9,及び_ではじまるstring」には1つ以上の半角スペースが要求される
 
 struct parse_result
 解析結果を示す構造体
-以下の4つのメンバ変数をもつ
+以下の6つのメンバ変数をもつ
 ・std::list<std::string> tokens_
 　tokenで解析された結果を順に保持するリスト
 ・std::list<std::list<std::string>> tuples_
 　tupleで解析された結果についてそれぞれ順に保持するリスト
+・std::list<std::string> str_lites_
+  str_literalで解析された結果についてそれぞれ順に保持するリスト
 ・std::list<sentence_data>::const_iiterator ite_;
 　どの構文で解析されたかを表すイテレータ
+・size_t type_num
+  ite_は前から何番目のイテレータかを表す整数、先頭を0とする
 ・bool is_valid
 　解析結果が有効かどうかのフラグ、falseなら解析失敗
 
