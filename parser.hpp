@@ -179,8 +179,8 @@ namespace dyz_parser
 		inline std::pair<size_t, std::string> read_str_lite(std::string::const_iterator beg,std::string::const_iterator end)
 		{
 			auto shift = string_literal_check(beg, end);
-			auto e = std::next(beg, shift);
-			return std::make_pair(shift, std::string(beg, e));
+			auto e = std::next(beg, shift - 1);
+			return std::make_pair(shift, std::string(std::next(beg, 1), e));
 		}
 
 		inline parse_result parse(sentence_data const& data, std::string const& line)
