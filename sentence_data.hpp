@@ -35,10 +35,10 @@ namespace dyz_parser
 
 	namespace placeholder
 	{
-		parse_helper::token_holder_type token_holder;
-		parse_helper::tuple_holder_type tuple_holder;
-		parse_helper::space_holder_type space_holder;
-		parse_helper::str_literal_type string_literal_holder;
+		const parse_helper::token_holder_type token_holder;
+		const parse_helper::tuple_holder_type tuple_holder;
+		const parse_helper::space_holder_type space_holder;
+		const parse_helper::str_literal_type string_literal_holder;
 	}
 
 	struct sentence_data
