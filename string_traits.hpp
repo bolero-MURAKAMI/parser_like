@@ -35,6 +35,7 @@ namespace dyz_parser
 			return 0;
 		bool is_escape = false;
 		auto ite = beg;
+		++ite;
 		for (; ite != end; ++ite)
 		{
 			if (is_escape)
@@ -59,4 +60,5 @@ namespace dyz_parser
 			((static_cast<int>('0') <= static_cast<int>(c)) &&
 			(static_cast<int>(c) <= static_cast<int>('9')));
 	}
+
 }
