@@ -58,7 +58,8 @@ namespace dyz_parser
 			((static_cast<int>('A') <= static_cast<int>(c)) &&
 			(static_cast<int>(c) <= static_cast<int>('Z'))) ||
 			((static_cast<int>('0') <= static_cast<int>(c)) &&
-			(static_cast<int>(c) <= static_cast<int>('9')));
+			(static_cast<int>(c) <= static_cast<int>('9'))) ||
+			c=='_';
 	}
 
 }
