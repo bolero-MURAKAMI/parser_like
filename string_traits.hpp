@@ -5,6 +5,7 @@
 #pragma once
 
 #include<string>
+#include<cctype>
 
 namespace dyz_parser
 {
@@ -53,13 +54,7 @@ namespace dyz_parser
 
 	inline bool token_string_check(char c)
 	{
-		return ((static_cast<int>('a') <= static_cast<int>(c)) &&
-			(static_cast<int>(c) <= static_cast<int>('z'))) ||
-			((static_cast<int>('A') <= static_cast<int>(c)) &&
-			(static_cast<int>(c) <= static_cast<int>('Z'))) ||
-			((static_cast<int>('0') <= static_cast<int>(c)) &&
-			(static_cast<int>(c) <= static_cast<int>('9'))) ||
-			c=='_';
+		return std::isalnum(c) || c=='_';
 	}
 
 }
