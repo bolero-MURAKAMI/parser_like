@@ -4,13 +4,30 @@
 
 #pragma once
 
+#include<cstddef>	// for std::size_t
 #include<string>
 #include<cctype>
+#include<type_traits>
 
 namespace dyz_parser
 {
-	
-	inline bool string_match(std::string::const_iterator beg, std::string::const_iterator end, const char* str)
+	namespace detail
+	{
+		extern void* enabler;	// for enable_if
+
+		template<class T>
+		struct is_char			// char only (possibly cv-qualified)
+			: public std::is_same<typename std::remove_cv<T>::type, char>
+		{};
+		template<class Iterator>
+		struct is_char_iterator
+			: public is_char<typename std::iterator_traits<Iterator>::value_type>
+		{};
+	}
+
+	template<class InputIterator, class StrIterator,
+		typename std::enable_if<detail::is_char_iterator<InputIterator>::value && detail::is_char_iterator<StrIterator>::value>::type*& = detail::enabler>
+	inline bool string_match(InputIterator beg, InputIterator end, StrIterator str)
 	{
 		while (true)
 		{
@@ -30,7 +47,8 @@ namespace dyz_parser
 			++str;
 		}
 	}
-	inline size_t string_literal_check(std::string::const_iterator beg, std::string::const_iterator end)
+	template<class InputIterator, typename std::enable_if<detail::is_char_iterator<InputIterator>::value>::type*& = detail::enabler>
+	inline std::size_t string_literal_check(InputIterator beg, InputIterator end)
 	{
 		if (*beg != '\"')
 			return 0;
@@ -49,7 +67,7 @@ namespace dyz_parser
 			if (*ite == '\\')
 				is_escape = true;
 		}
-		return false;
+		return 0;
 	}
 
 	inline bool token_string_check(char c)

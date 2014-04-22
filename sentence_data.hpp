@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include<iterator>
 #include<string>
 #include<list>
 #include<type_traits>
@@ -35,10 +36,10 @@ namespace dyz_parser
 
 	namespace placeholder
 	{
-		const parse_helper::token_holder_type token_holder;
-		const parse_helper::tuple_holder_type tuple_holder;
-		const parse_helper::space_holder_type space_holder;
-		const parse_helper::str_literal_type string_literal_holder;
+		const parse_helper::token_holder_type token_holder{};
+		const parse_helper::tuple_holder_type tuple_holder{};
+		const parse_helper::space_holder_type space_holder{};
+		const parse_helper::str_literal_type string_literal_holder{};
 	}
 
 	struct sentence_data
@@ -88,7 +89,7 @@ namespace dyz_parser
 			}
 		}
 
-		template<class... Ts>sentence_data(Ts... arg)
+		template<class... Ts>explicit sentence_data(Ts... arg)
 		{
 			init(arg...);
 		}

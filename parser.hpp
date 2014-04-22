@@ -6,8 +6,12 @@
 
 #include"sentence_data.hpp"
 #include"string_traits.hpp"
+#include<cstddef>	// for std::size_t
+#include<tuple>		// for std::get
+#include<iterator>
 #include<list>
 #include<string>
+#include<type_traits>
 
 namespace dyz_parser
 {
@@ -18,27 +22,27 @@ namespace dyz_parser
 		std::list<std::string> str_lites_;
 		std::list<sentence_data>::const_iterator ite_;
 		bool is_valid;
-		size_t type_num;
+		std::size_t type_num;
 	};
-	
+
 	namespace detail
 	{
 		//parse type
-		inline size_t parse_type_case_token(std::string::const_iterator beg, std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::size_t parse_type_case_token(InputIterator beg, InputIterator end)
 		{
-			int ret = 0;
+			std::size_t ret = 0;
 			for (; beg!=end && token_string_check(*beg); ++beg, ++ret);
 			return ret;
 		}
 
-		inline size_t parse_type_case_tuple(
-			std::string::const_iterator beg, 
-			std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::size_t parse_type_case_tuple(InputIterator beg, InputIterator end)
 		{
 			if (*beg != '(')
 				return 0;
 			auto ite = beg;
-			for (int i = 1; i != 0;)
+			for (std::size_t i = 1; i != 0;)
 			{
 				++ite;
 				if (ite == end)
@@ -58,12 +62,11 @@ namespace dyz_parser
 			return std::distance(beg, ite);
 		}
 
-		inline size_t parse_type_case_space(
-			std::string::const_iterator beg, 
-			std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::size_t parse_type_case_space(InputIterator beg, InputIterator end)
 		{
-			size_t ret = 0;
-			for (; *beg == ' '; ++beg, ++ret);
+			std::size_t ret = 0;
+			for (; beg!=end && *beg == ' '; ++beg, ++ret);
 			return ret;
 		}
 
@@ -139,20 +142,21 @@ namespace dyz_parser
 		}
 
 		//parse
-		inline std::pair<size_t,std::string> read_token(std::string::const_iterator beg, std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::pair<std::size_t,std::string> read_token(InputIterator beg, InputIterator end)
 		{
 			auto ite = beg;
 			for (; ite != end && token_string_check(*ite); ++ite);
 			return std::make_pair(std::distance(beg,ite), std::string(beg, ite));
 		}
 
-		inline std::pair<size_t, std::list<std::string>>
-				read_tuple(std::string::const_iterator beg,std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::pair<std::size_t, std::list<std::string>> read_tuple(InputIterator beg, InputIterator end)
 		{
 			auto ite = beg;
 			auto sta = std::next(beg);
 			std::list<std::string> ret;
-			for (int i = 1; i != 0;)
+			for (std::size_t i = 1; i != 0;)
 			{
 				++ite;
 				if (ite == end)
@@ -178,7 +182,8 @@ namespace dyz_parser
 			return std::make_pair(std::distance(beg, ite), ret);
 		}
 
-		inline std::pair<size_t, std::string> read_str_lite(std::string::const_iterator beg,std::string::const_iterator end)
+		template<class InputIterator, typename std::enable_if<is_char_iterator<InputIterator>::value>::type*& = enabler>
+		inline std::pair<std::size_t, std::string> read_str_lite(InputIterator beg, InputIterator end)
 		{
 			auto shift = string_literal_check(beg, end);
 			auto e = std::next(beg, shift - 1);
